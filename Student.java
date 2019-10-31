@@ -1,4 +1,5 @@
 public class Student{
+  
   private String stuNo;
   
   public void say(){
