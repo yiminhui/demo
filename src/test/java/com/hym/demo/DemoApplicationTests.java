@@ -1,14 +1,14 @@
 package com.hym.demo;
 
-import com.hym.demo.mybatis.IUserDao;
-import com.hym.demo.mybatis.MapperProxyFactory;
+import com.hym.demo.test.dao.ISchoolDao;
+import com.hym.demo.test.dao.IUserDao;
+import com.hym.demo.mybatis.binding.MapperRegistry;
+import com.hym.demo.mybatis.session.SqlSession;
+import com.hym.demo.mybatis.session.SqlSessionFactory;
+import com.hym.demo.mybatis.session.defaults.DefaultSqlSessionFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.HashMap;
-import java.util.Map;
 
 class DemoApplicationTests {
 
@@ -20,14 +20,19 @@ class DemoApplicationTests {
 
     @Test
     public void test_MapperProxyFactory() {
-        MapperProxyFactory<IUserDao> factory = new MapperProxyFactory<>(IUserDao.class);
-        Map<String, String> sqlSession = new HashMap<>();
+        // 1. 注册 Mapper
+        MapperRegistry registry = new MapperRegistry();
+        registry.addMappers("com.hym.demo.test.dao");
 
-        sqlSession.put("cn.bugstack.mybatis.test.dao.IUserDao.queryUserName", "模拟执行 Mapper.xml 中 SQL 语句的操作：查询用户姓名");
-        sqlSession.put("cn.bugstack.mybatis.test.dao.IUserDao.queryUserAge", "模拟执行 Mapper.xml 中 SQL 语句的操作：查询用户年龄");
-        IUserDao userDao = factory.newInstance(sqlSession);
+        // 2. 从 SqlSession 工厂获取 Session
+        SqlSessionFactory sqlSessionFactory = new DefaultSqlSessionFactory(registry);
+        SqlSession sqlSession = sqlSessionFactory.openSession();
 
-        String res = userDao.queryUserName("10001");
+        // 3. 获取映射器对象
+        ISchoolDao schoolDao = sqlSession.getMapper(ISchoolDao.class);
+
+        // 4. 测试验证
+        String res = schoolDao.querySchoolName("10001");
         logger.info("测试结果：{}", res);
     }
 

@@ -1,4 +1,4 @@
-package com.hym.demo.mybatis;
+package com.hym.demo.test.dao;
 
 /**
  * @author hym

@@ -1,4 +1,6 @@
-package com.hym.demo.mybatis;
+package com.hym.demo.mybatis.binding;
+
+import com.hym.demo.mybatis.session.SqlSession;
 
 import java.io.Serializable;
 import java.lang.reflect.InvocationHandler;
@@ -15,11 +17,11 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Map<String, String> sqlSession;
+    private SqlSession sqlSession;
 
     private final Class<T> mapperInterface;
 
-    public MapperProxy(Map<String, String> sqlSession, Class<T> mapperInterface) {
+    public MapperProxy(SqlSession sqlSession, Class<T> mapperInterface) {
         this.sqlSession = sqlSession;
         this.mapperInterface = mapperInterface;
     }
